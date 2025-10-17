@@ -1,3 +1,4 @@
+import { Calculator } from '@/components/Widgets/calculator';
 import { TestWidget } from '@/components/Widgets/test-widget';
 import { StyleSheet, View } from "react-native";
 
@@ -7,6 +8,7 @@ export default function Index() {
       style={styles.app}
     >
       <TestWidget />
+      <Calculator style={{paddingTop: "10%"}}/>
     </View>
   );
 }
@@ -14,7 +16,7 @@ export default function Index() {
 const styles = StyleSheet.create({
   app: {
     flex: 1,
-    justifyContent: "center",
     alignItems: "center",
+    marginVertical: "15%",
   },
 });
