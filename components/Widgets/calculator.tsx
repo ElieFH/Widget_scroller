@@ -6,14 +6,26 @@ const keyboardValues = [
   "4", "5", "6", "-",
   "1", "2", "3", "+",
   "0", ".", "=", "/",
-  "C"
+  "C", "CE"
 ];
+
+const symbolRegex = /(?:\+|\-|\*|\/)(?!.*(?:\+|\-|\*|\/))/
 
 const isSymbol = (value: String): Boolean => {
   if (value === '+' ||
       value === '*' ||
       value === '-' ||
       value === "/"
+    ) {
+    return true
+  }
+  return false
+}
+
+const isError = (value: String): Boolean => {
+  if (value === 'NaN' ||
+      value === 'Infinity' ||
+      value === '-Infinity'
     ) {
     return true
   }
@@ -37,17 +49,28 @@ export function Calculator({style} : ViewProps) {
             setPrevString("")
             return
           }
-          if (currentNumber === "0" && buttonValue !== "." && !isSymbol(buttonValue) ||
-              buttonValue === "." && (currentNumber === "" || currentNumber.includes(".")) ||
-              calcString === "NaN" || calcString === "Infinity" || calcString === "-Infinity" ||
-              isSymbol(buttonValue) && (calcString === "" || isSymbol(calcString.slice(-1))))
+          if (buttonValue === "CE") {
+            const newCalcValue = isError(calcString) ? "" : calcString.slice(0, -1)
+
+            setCalcString(newCalcValue)
+            if (currentNumber.length > 0)
+              setCurrentNumber(currentNumber.slice(0, -1))
+            else {
+              symbolRegex.exec(newCalcValue) ? setCurrentNumber(newCalcValue.slice(symbolRegex.exec(newCalcValue)?.index + 1)) : setCurrentNumber(newCalcValue)
+            }
+            return
+          }
+          if (currentNumber === "0" && buttonValue !== "."  && buttonValue !== "=" && !isSymbol(buttonValue) ||
+              buttonValue === "." && (currentNumber === "" || currentNumber.includes(".") || isError(calcString)) ||
+              isSymbol(buttonValue) && (calcString === "" || calcString.slice(-1) === "." || isSymbol(calcString.slice(-1)) || isError(calcString)) ||
+              buttonValue === "=" && (isSymbol(calcString.slice(-1)) || calcString.slice(-1) === "."))
             return
           if (buttonValue === "=") {
             try {
-              if (!isSymbol(calcString!.slice(-1)))
+              if (!isSymbol(calcString.slice(-1)))
                 setPrevString(calcString + "=")
-                setCurrentNumber("")
                 setCalcString(eval(calcString).toString())
+                setCurrentNumber(eval(calcString).toString())
             } catch (e) {
               setCurrentNumber("")
               setCalcString("")
@@ -56,8 +79,8 @@ export function Calculator({style} : ViewProps) {
             if (isSymbol(buttonValue))
               setCurrentNumber("");
             else
-              setCurrentNumber(currentNumber + buttonValue);
-            setCalcString(calcString + buttonValue)
+              isError(calcString) ? setCurrentNumber(buttonValue) : setCurrentNumber(currentNumber + buttonValue);
+            isError(calcString) ? setCalcString(buttonValue) : setCalcString(calcString + buttonValue)
           }
         }}
         style={[styles.button, {backgroundColor: buttonValue === "=" ? "#96beeb" : isSymbol(buttonValue) ? "#cde5ee" : "#dbe9ec"}]}
