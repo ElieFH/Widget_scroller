@@ -12,24 +12,18 @@ const keyboardValues = [
 const symbolRegex = /(?:\+|\-|\*|\/)(?!.*(?:\+|\-|\*|\/))/
 
 const isSymbol = (value: String): Boolean => {
-  if (value === '+' ||
+  return (value === '+' ||
       value === '*' ||
       value === '-' ||
       value === "/"
-    ) {
-    return true
-  }
-  return false
+  )
 }
 
 const isError = (value: String): Boolean => {
-  if (value === 'NaN' ||
-      value === 'Infinity' ||
-      value === '-Infinity'
-    ) {
-    return true
-  }
-  return false
+  return (value === 'NaN' ||
+          value === 'Infinity' ||
+          value === '-Infinity'
+  )
 }
 
 export function Calculator({style} : ViewProps) {
@@ -39,6 +33,7 @@ export function Calculator({style} : ViewProps) {
 
   //console.log("calcString: " + calcString + "\n" + "currentNumber: " + currentNumber);
   
+  //This probably should've been separated into different elements, that onPress function is insane
   const calcButton = (buttonValue: string) => {
     return (
       <TouchableOpacity
@@ -60,7 +55,8 @@ export function Calculator({style} : ViewProps) {
             }
             return
           }
-          if (currentNumber === "0" && buttonValue !== "."  && buttonValue !== "=" && !isSymbol(buttonValue) ||
+          if (calcString.length >= 17 && buttonValue !== "=" ||
+              currentNumber === "0" && buttonValue !== "."  && buttonValue !== "=" && !isSymbol(buttonValue) ||
               buttonValue === "." && (currentNumber === "" || currentNumber.includes(".") || isError(calcString)) ||
               isSymbol(buttonValue) && (calcString === "" || calcString.slice(-1) === "." || isSymbol(calcString.slice(-1)) || isError(calcString)) ||
               buttonValue === "=" && (isSymbol(calcString.slice(-1)) || calcString.slice(-1) === "."))
@@ -69,8 +65,8 @@ export function Calculator({style} : ViewProps) {
             try {
               if (!isSymbol(calcString.slice(-1)))
                 setPrevString(calcString + "=")
-                setCalcString(eval(calcString).toString())
-                setCurrentNumber(eval(calcString).toString())
+                setCalcString(Number(eval(calcString).toFixed(10)).toString())
+                setCurrentNumber(Number(eval(calcString).toFixed(10)).toString())
             } catch (e) {
               setCurrentNumber("")
               setCalcString("")
