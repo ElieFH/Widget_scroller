@@ -5,7 +5,7 @@ export function TestWidget() {
     <View
       style={styles.container}
     >
-      <Text>Widget number 1</Text>
+      <Text>[This Widget is a piece of text]</Text>
     </View>
   );
 }

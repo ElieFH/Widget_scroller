@@ -51,7 +51,8 @@ export function Calculator({style} : ViewProps) {
             if (currentNumber.length > 0)
               setCurrentNumber(currentNumber.slice(0, -1))
             else {
-              symbolRegex.exec(newCalcValue) ? setCurrentNumber(newCalcValue.slice(symbolRegex.exec(newCalcValue)?.index + 1)) : setCurrentNumber(newCalcValue)
+              const symbolExec = symbolRegex.exec(newCalcValue)
+              symbolExec ? setCurrentNumber(newCalcValue.slice(symbolExec?.index + 1)) : setCurrentNumber(newCalcValue)
             }
             return
           }
