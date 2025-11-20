@@ -1,4 +1,5 @@
 import { Calculator } from '@/components/Widgets/calculator';
+import { ImageFlipper } from '@/components/Widgets/image-flipper';
 import { Weather } from '@/components/Widgets/weather';
 import { ScrollView, StyleSheet, View } from "react-native";
 
@@ -8,6 +9,7 @@ export default function Index() {
       style={styles.app}
     >
       <ScrollView style={styles.scroller}>
+        <ImageFlipper style={{paddingTop: "10%"}}/>
         <Weather style={{paddingTop: "10%"}}/>
         <Calculator style={{paddingTop: "10%"}}/>
       </ScrollView>

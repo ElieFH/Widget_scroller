@@ -2,6 +2,8 @@ import axios from 'axios';
 import { useState } from "react";
 import { Image, StyleSheet, Text, TextInput, View, type ViewProps } from "react-native";
 
+//api site : www.weatherapi.com
+
 const WEATHER_API_KEY = "cdec1d7b604941c787d150148250711"
 const WEATHER_API_URL = "http://api.weatherapi.com/v1/current.json"
 
