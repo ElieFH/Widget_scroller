@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View, type ViewProps } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, useWindowDimensions, View, type ViewProps } from 'react-native';
 
 const keyboardValues = [
   "7", "8", "9", "*",
@@ -27,6 +27,8 @@ const isError = (value: String): Boolean => {
 }
 
 export function Calculator({style} : ViewProps) {
+  const {width} = useWindowDimensions();
+
   const [calcString, setCalcString] = useState("");
   const [currentNumber, setCurrentNumber] = useState("");
   const [prevString, setPrevString] = useState("");
@@ -90,7 +92,7 @@ export function Calculator({style} : ViewProps) {
 
   return (
     <View
-      style={[styles.mainContainer, style]}
+      style={[styles.mainContainer, { width: width }, style]}
     >
       <Text style={styles.titleText}>Calculator:</Text>
       <View style={styles.calcInput}>
@@ -106,9 +108,6 @@ export function Calculator({style} : ViewProps) {
 
 const styles = StyleSheet.create({
   mainContainer: {
-    width: "100%",
-    alignContent: "center",
-    justifyContent: "center",
   },
   titleText: {
     fontSize: 20,

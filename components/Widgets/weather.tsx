@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useState } from "react";
-import { Image, StyleSheet, Text, TextInput, View, type ViewProps } from "react-native";
+import { Image, StyleSheet, Text, TextInput, useWindowDimensions, View, type ViewProps } from "react-native";
 
 //api site : www.weatherapi.com
 
@@ -21,6 +21,7 @@ const defaultData = {
 }
 
 export function Weather({style} : ViewProps) {
+  const {width} = useWindowDimensions();
   const [cityName, setCityName] = useState("");
   const [weatherData, setWeatherData] = useState(defaultData);
   const [isError, setIsError] = useState(false);
@@ -31,7 +32,7 @@ export function Weather({style} : ViewProps) {
 
   return (
     <View
-      style={[styles.mainContainer, style]}
+      style={[styles.mainContainer, { width: width }, style]}
     >
       <Text style={styles.titleText}>Weather widget:</Text>
       <Text style={styles.questionText}>What's the weather in your city?</Text>

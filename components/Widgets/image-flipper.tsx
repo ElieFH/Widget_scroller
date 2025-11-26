@@ -2,15 +2,16 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 
 import { Asset } from 'expo-asset';
-import { ImageResult, useImageManipulator } from 'expo-image-manipulator';
+import { ImageResult } from 'expo-image-manipulator';
 import { useRef, useState } from 'react';
-import { Animated, Easing, StyleSheet, Text, TouchableOpacity, View, type ViewProps } from "react-native";
+import { Animated, Easing, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View, type ViewProps } from "react-native";
 
 const DEFAULT_IMAGE = Asset.fromModule(require('@/assets/images/key.png'));
 
 export function ImageFlipper({style} : ViewProps) {
+  const { width } = useWindowDimensions()
   const [image, setImage] = useState<Asset | ImageResult>(DEFAULT_IMAGE);
-  const context = useImageManipulator(DEFAULT_IMAGE.uri);
+  //const context = useImageManipulator(DEFAULT_IMAGE.uri);
 
   const rotateAnim = useRef(new Animated.Value(0)).current;
   const rotationCount = useRef(0);
@@ -93,7 +94,7 @@ export function ImageFlipper({style} : ViewProps) {
 
   return (
     <View
-      style={[styles.mainContainer, style]}
+      style={[styles.mainContainer, {width: width}, style]}
     >
       <Text style={styles.titleText}>Image Flipper:</Text>
       <View style={styles.widgetContainer}>
@@ -127,7 +128,6 @@ const styles = StyleSheet.create({
   mainContainer: {
   },
   widgetContainer: {
-    width: "100%",
     alignItems: "center",
   },
   buttons: {
