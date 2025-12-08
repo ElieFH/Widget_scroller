@@ -1,4 +1,4 @@
-import { DraggableItemList } from '@/components/draggable-item-list';
+import DraggableItemList from '@/components/draggable-item-list';
 import { Calculator } from '@/components/Widgets/calculator';
 import { ImageFlipper } from '@/components/Widgets/image-flipper';
 import { Weather } from '@/components/Widgets/weather';
@@ -12,9 +12,16 @@ export default function Index() {
   const {height} = useWindowDimensions()
   const [scrollHorizontal, setScrollHorizontal] = useState<boolean>(true)
   const actionSheetRef = useRef<ActionSheetRef>(null)
-
-  const toggleSwitch = () => setScrollHorizontal(previousState => !previousState);
   
+  const [widgetList, setWidgetList] = useState([{ type: Calculator }, { type: ImageFlipper }, { type: Weather }]);
+
+  const swapWidgets = (pos1: number, pos2: number ) => {
+    let tempArray = [...widgetList];
+
+    tempArray.splice(pos2, 0, tempArray.splice(pos1, 1)[0]);
+    setWidgetList(tempArray);
+  }
+
   return (
     <GestureHandlerRootView>
       <SafeAreaProvider>
@@ -31,11 +38,12 @@ export default function Index() {
               <Switch
                 trackColor={{false: '#81b0ff', true: '#81b0ff'}}
                 thumbColor={'#f4f3f4'}
-                onValueChange={toggleSwitch}
+                onValueChange={() => setScrollHorizontal(previousState => !previousState)}
                 value={scrollHorizontal}
               />
               <Text style={[styles.switchText, scrollHorizontal ? {color: "black"} : {color: "grey"}]}>Horizontal</Text>
             </View>
+            {/*<Text>Widgets Order: </Text>*/}
           </ActionSheet>
           <TouchableOpacity 
             onPress={() => actionSheetRef.current?.show()}
@@ -43,11 +51,12 @@ export default function Index() {
           >
             <Text>Touch here</Text>          
           </TouchableOpacity>
-          <DraggableItemList style={{paddingVertical: height / 30}} />
+          <DraggableItemList onListChange={swapWidgets} style={{paddingVertical: height / 30}} />
           <ScrollView horizontal={scrollHorizontal} style={scrollHorizontal ? styles.scrollerHorizontal : styles.scrollerVertical}>
-            <Calculator style={{paddingVertical: height / 30}}/>
-            <ImageFlipper style={{paddingVertical: height / 30}}/>
-            <Weather style={{paddingVertical: height / 30}}/>
+            {widgetList.map((widget, index) => {
+              const Widget = widget.type;
+              return (<Widget style={{paddingVertical: scrollHorizontal ? 5 : height / 30}} key={index}/>);
+            })}
           </ScrollView>
         </SafeAreaView>
       </SafeAreaProvider>

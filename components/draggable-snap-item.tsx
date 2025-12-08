@@ -9,9 +9,10 @@ type DraggableSnapItemProps = {
   containerWidth: number, 
   containerHeight: number,
   allowedXValues: number[],
-  itemIds: number[],
+  itemIds: string[],
   onCollision: (pos1: number, pos2: number) => void,
-  id: number,
+  onRelease: (pos1: number, pos2: number) => void,
+  id: string,
   pos: number,
   style?: ViewStyle,
 };
@@ -22,6 +23,7 @@ const DraggableSnapItem: React.FC<DraggableSnapItemProps> = ({
   containerHeight,
   allowedXValues,
   onCollision,
+  onRelease,
   id,
   pos,
   style,
@@ -30,6 +32,7 @@ const DraggableSnapItem: React.FC<DraggableSnapItemProps> = ({
   const hitbox = (size/2 + size/3);
   const isPressed = useSharedValue(false);
   const isSwapping = useSharedValue(false);
+  const startPos = useSharedValue(pos);
   const currentPos = useSharedValue(pos);
   const offset = useSharedValue({ x: allowedXValues[pos], y: fixedY });
   const start = useSharedValue({ x: allowedXValues[pos], y: fixedY });
@@ -58,6 +61,7 @@ const DraggableSnapItem: React.FC<DraggableSnapItemProps> = ({
   const gesture = Gesture.Pan()
     .onBegin(() => {
       isPressed.value = true;
+      startPos.value = currentPos.value;
     })
     .onUpdate((e) => {
       offset.value = {
@@ -87,14 +91,12 @@ const DraggableSnapItem: React.FC<DraggableSnapItemProps> = ({
       }
     })
     .onEnd(() => {
-      //const closestX = allowedXValues.reduce((prev, curr) =>
-      //  Math.abs(curr - offset.value.x) < Math.abs(prev - offset.value.x) ? curr : prev
-      //);
-
       offset.value = withSpring({
         x: allowedXValues[currentPos.value],
         y: fixedY,
       });
+
+      scheduleOnRN(onRelease, startPos.value, currentPos.value);
 
       start.value = {
         x: allowedXValues[currentPos.value],
