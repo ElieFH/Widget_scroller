@@ -1,5 +1,7 @@
+import { WidgetIconName } from "@/utils/constants";
+import AntDesign from '@expo/vector-icons/AntDesign';
 import { useEffect } from "react";
-import { StyleSheet, Text, ViewStyle } from "react-native";
+import { StyleSheet, ViewStyle } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, { clamp, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import { scheduleOnRN } from "react-native-worklets";
@@ -9,10 +11,9 @@ type DraggableSnapItemProps = {
   containerWidth: number, 
   containerHeight: number,
   allowedXValues: number[],
-  itemIds: string[],
   onCollision: (pos1: number, pos2: number) => void,
   onRelease: (pos1: number, pos2: number) => void,
-  id: string,
+  type: ("CALC" | "WEATHER" | "FLIP"),
   pos: number,
   style?: ViewStyle,
 };
@@ -24,7 +25,7 @@ const DraggableSnapItem: React.FC<DraggableSnapItemProps> = ({
   allowedXValues,
   onCollision,
   onRelease,
-  id,
+  type,
   pos,
   style,
 }) => {
@@ -123,7 +124,8 @@ const DraggableSnapItem: React.FC<DraggableSnapItemProps> = ({
         <Animated.View
           style={[styles.movableSquare, style, {width: size, height: size, justifyContent: "center"}, animatedStyles]} 
         >
-          <Text style={{color: "white", fontSize: 15, alignSelf: "center"}}>{id}</Text>
+          <AntDesign name={WidgetIconName[type]} size={30} color="#000000ff" style={{alignSelf: "center"}}/>
+          {/*<Text style={{color: "white", fontSize: 15, alignSelf: "center"}}>{type}</Text>*/}
         </Animated.View>
       </GestureDetector>
   );
@@ -133,7 +135,7 @@ const styles = StyleSheet.create({
   movableSquare: {
     position: "absolute",
     borderRadius: 10,
-    backgroundColor: "blue",
+    backgroundColor: "white",
     outlineColor: "yellow",
   }
 });

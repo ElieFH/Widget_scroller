@@ -1,4 +1,5 @@
 import DraggableSnapItem from "@/components/draggable-snap-item";
+import { WidgetTypeKey } from "@/utils/constants";
 import { useState } from "react";
 import { StyleSheet, useWindowDimensions, View, ViewStyle } from "react-native";
 
@@ -7,16 +8,16 @@ const DRAGZONE_HEIGHT = 120;
 
 type DraggableItemListProps = {
   onListChange: (pos1: number, pos2: number) => void,
+  widgetTypeList: ("CALC" | "WEATHER" | "FLIP")[],
   style?: ViewStyle,
 };
 
-const DraggableItemList: React.FC<DraggableItemListProps> = ({onListChange, style}) => {
+const DraggableItemList: React.FC<DraggableItemListProps> = ({onListChange, widgetTypeList, style}) => {
   const { width } = useWindowDimensions();
   const dragzoneCenterPos = width/2 - (SQUARE_SIZE/2);
   const allowedXValues = [dragzoneCenterPos - 80, dragzoneCenterPos, dragzoneCenterPos + 80];
 
-  //each id represent an item and their position in the array represent their position in the list
-  const [itemIds, setItemIds] = useState<string[]>(["C", "F", "W"]);
+  const [itemIds, setItemIds] = useState<("CALC" | "WEATHER" | "FLIP")[]>(widgetTypeList);
 
   const swapItems = (pos1: number, pos2: number ) => {
     let tempArray = [...itemIds];
@@ -32,19 +33,18 @@ const DraggableItemList: React.FC<DraggableItemListProps> = ({onListChange, styl
     <View
       style={[styles.container, style]}
     >
-      {itemIds.map((id, index) => {
+      {itemIds.map((type, index) => {
         return(
           <DraggableSnapItem
             size={SQUARE_SIZE}
             allowedXValues={allowedXValues}
-            itemIds={itemIds}
             onCollision={swapItems}
             onRelease={onListChange}
             containerWidth={width}
             containerHeight={DRAGZONE_HEIGHT}
-            id={id}
+            type={type}
             pos={index}
-            key={id}
+            key={WidgetTypeKey[type]}
           />
         );
       })}

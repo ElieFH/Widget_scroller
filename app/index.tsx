@@ -1,7 +1,5 @@
 import DraggableItemList from '@/components/draggable-item-list';
-import { Calculator } from '@/components/Widgets/calculator';
-import { ImageFlipper } from '@/components/Widgets/image-flipper';
-import { Weather } from '@/components/Widgets/weather';
+import { WidgetElement, WidgetType } from "@/utils/constants";
 import { useRef, useState } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View } from "react-native";
 import ActionSheet, { ActionSheetRef } from "react-native-actions-sheet";
@@ -13,7 +11,7 @@ export default function Index() {
   const [scrollHorizontal, setScrollHorizontal] = useState<boolean>(true)
   const actionSheetRef = useRef<ActionSheetRef>(null)
   
-  const [widgetList, setWidgetList] = useState([{ type: Calculator }, { type: ImageFlipper }, { type: Weather }]);
+  const [widgetList, setWidgetList] = useState([WidgetType.CALCULATOR, WidgetType.FLIPPER, WidgetType.WEATHER]);
 
   const swapWidgets = (pos1: number, pos2: number ) => {
     let tempArray = [...widgetList];
@@ -43,18 +41,22 @@ export default function Index() {
               />
               <Text style={[styles.switchText, scrollHorizontal ? {color: "black"} : {color: "grey"}]}>Horizontal</Text>
             </View>
-            {/*<Text>Widgets Order: </Text>*/}
+            <Text>Widgets Order: </Text>
+            <DraggableItemList 
+              onListChange={swapWidgets} 
+              widgetTypeList={widgetList}
+              style={{paddingVertical: height / 30}} 
+            />
           </ActionSheet>
           <TouchableOpacity 
             onPress={() => actionSheetRef.current?.show()}
-            style={{backgroundColor: "cyan", paddingHorizontal: 10, paddingVertical: 10}}
+            style={{backgroundColor: "white", paddingHorizontal: 10, paddingVertical: 10}}
           >
-            <Text>Touch here</Text>          
+            <Text>Touch here for options</Text>          
           </TouchableOpacity>
-          <DraggableItemList onListChange={swapWidgets} style={{paddingVertical: height / 30}} />
           <ScrollView horizontal={scrollHorizontal} style={scrollHorizontal ? styles.scrollerHorizontal : styles.scrollerVertical}>
             {widgetList.map((widget, index) => {
-              const Widget = widget.type;
+              const Widget = WidgetElement[widget];
               return (<Widget style={{paddingVertical: scrollHorizontal ? 5 : height / 30}} key={index}/>);
             })}
           </ScrollView>
