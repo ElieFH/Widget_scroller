@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     borderRadius: 10,
     backgroundColor: "white",
-    outlineColor: "yellow",
+    outlineColor: "blue",
   }
 });
 

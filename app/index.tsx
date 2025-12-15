@@ -1,5 +1,6 @@
 import DraggableItemList from '@/components/draggable-item-list';
 import { WidgetElement, WidgetType } from "@/utils/constants";
+import AntDesign from '@expo/vector-icons/AntDesign';
 import { useRef, useState } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View } from "react-native";
 import ActionSheet, { ActionSheetRef } from "react-native-actions-sheet";
@@ -28,9 +29,9 @@ export default function Index() {
         >
           <ActionSheet 
             ref={actionSheetRef}
-            containerStyle={{backgroundColor: "lightgrey"}}
+            containerStyle={{backgroundColor: "lightgrey", paddingTop: 10}}
           >
-            <Text>Scroll Type: </Text>
+            <Text style={styles.settingsText}>{"Scroll Type"}</Text>
             <View style={styles.switchContainer}>
               <Text style={[styles.switchText, scrollHorizontal ? {color: "grey"} : {color: "black"}]}>Vertical</Text>
               <Switch
@@ -41,18 +42,19 @@ export default function Index() {
               />
               <Text style={[styles.switchText, scrollHorizontal ? {color: "black"} : {color: "grey"}]}>Horizontal</Text>
             </View>
-            <Text>Widgets Order: </Text>
+            <Text style={styles.settingsText}>{"Widgets Order"}</Text>
+            <Text style={{color: "grey"}}>{"(Drag the icons arround to change the order)"}</Text>
             <DraggableItemList 
               onListChange={swapWidgets} 
               widgetTypeList={widgetList}
-              style={{paddingVertical: height / 30}} 
             />
           </ActionSheet>
           <TouchableOpacity 
             onPress={() => actionSheetRef.current?.show()}
-            style={{backgroundColor: "white", paddingHorizontal: 10, paddingVertical: 10}}
+            style={styles.optionButton}
           >
-            <Text>Touch here for options</Text>          
+            <AntDesign name={"setting"} size={30} color="#000000ff"/>
+            <Text>{"Settings"}</Text>
           </TouchableOpacity>
           <ScrollView horizontal={scrollHorizontal} style={scrollHorizontal ? styles.scrollerHorizontal : styles.scrollerVertical}>
             {widgetList.map((widget, index) => {
@@ -69,15 +71,31 @@ export default function Index() {
 const styles = StyleSheet.create({
   app: {
     flex: 1,
-    alignItems: "center",
   },
   switchContainer: {
     marginLeft: "15%",
+    marginBottom: 15,
     flexDirection: 'row',
     alignItems: 'center',
   },
+  optionButton: {
+    backgroundColor: "white", 
+    width: "25%",
+    height: 35,
+    flexDirection: "row",
+    justifyContent: "space-around",
+    borderRadius: 10,
+    marginLeft: 5,
+    marginTop: 5,
+    alignItems: "center",
+  },
   switchText: {
     fontSize: 20,
+  },
+  settingsText: {
+    paddingLeft: 5,
+    fontSize: 17,
+    fontWeight: "600",
   },
   scrollerVertical: {
     width: "100%",

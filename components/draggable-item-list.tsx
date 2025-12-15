@@ -4,7 +4,7 @@ import { useState } from "react";
 import { StyleSheet, useWindowDimensions, View, ViewStyle } from "react-native";
 
 const SQUARE_SIZE = 50;
-const DRAGZONE_HEIGHT = 120;
+const DRAGZONE_HEIGHT = 100;
 
 type DraggableItemListProps = {
   onListChange: (pos1: number, pos2: number) => void,
@@ -56,16 +56,8 @@ const styles = StyleSheet.create({
   container: {
     width: "100%",
     height: DRAGZONE_HEIGHT,
-    backgroundColor: 'black',
+    backgroundColor: "black",
   },
-  movableSquare: {
-    width: SQUARE_SIZE,
-    height: SQUARE_SIZE,
-    position: "absolute",
-    borderRadius: 10,
-    backgroundColor: "blue",
-    outlineColor: "yellow",
-  }
 });
 
 export default DraggableItemList;
